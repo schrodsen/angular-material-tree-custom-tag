@@ -1,0 +1,82 @@
+<button mat-icon-button color="primary" (click)="addNewRoot()">
+<mat-icon>add_box</mat-icon>
+</button>
+
+<button mat-icon-button color="primary" (click)="expandAll()">
+<mat-icon>expand</mat-icon>
+</button>
+
+<button mat-icon-button color="primary" (click)="collapseAll()">
+<mat-icon>compress</mat-icon>
+</button>
+
+<button mat-icon-button color="primary" (click)="refresh()">
+<mat-icon>sync</mat-icon>
+</button>
+
+<p id="newRoot" class="hidden form-container">
+  <mat-form-field appearance="fill">
+    <mat-label>Neues Tag</mat-label>
+    <input matInput>
+    <button mat-icon-button matPrefix color="primary" (click)="saveNewRootNode()">
+      <mat-icon >save</mat-icon>
+    </button>
+  </mat-form-field>
+</p>
+
+<mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
+
+<mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle matTreeNodePadding>
+  <button mat-icon-button disabled></button>
+  <mat-icon class="type-icon" [attr.aria-label]="node.type + 'icon'">
+    {{ node.type === 'file' ? 'description' : 'folder' }}
+  </mat-icon>
+  {{node.name}} ( {{node.counter}} )
+  <button mat-icon-button color="warn">
+    <mat-icon>add_box</mat-icon>
+  </button>
+</mat-tree-node>
+
+<mat-tree-node *matTreeNodeDef="let node; when: hasNoContent" matTreeNodePadding>
+  <button mat-icon-button disabled></button>
+  <mat-form-field appearance="fill">
+    <mat-label>New item...</mat-label>
+    <input matInput #itemValue placeholder="Ex. Lettuce">
+  </mat-form-field>
+  <button mat-button (click)="saveNode(node)">Save</button>
+</mat-tree-node>
+
+<mat-tree-node *matTreeNodeDef="let node;when: hasChild" matTreeNodePadding>
+  <button mat-icon-button matTreeNodeToggle
+          [attr.aria-label]="'toggle ' + node.name">
+    <mat-icon class="mat-icon-rtl-mirror">
+      {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
+    </mat-icon>
+  </button>
+  <mat-icon class="type-icon" [attr.aria-label]="node.type + 'icon'">
+    {{ node.type ==='file' ? 'description' : 'folder' }}
+  </mat-icon>
+  {{node.name}} ( {{node.counter}} )
+  <div class="mat-tree-node">
+    <button mat-icon-button color="primary" class="test" (click)="addNewNode(node)">
+      <mat-icon>add_circle</mat-icon>
+    </button>
+  </div>
+</mat-tree-node>
+
+<mat-tree-node *matTreeNodeDef="let node;when: hasNoMedia" matTreeNodePadding  class="box">
+  <button mat-icon-button disabled></button>
+  <mat-icon class="type-icon" [attr.aria-label]="node.type + 'icon'">
+    {{ node.type ==='file' ? 'description' : 'folder' }}
+  </mat-icon>
+  <span style="flex: 1 1 auto;">{{node.name}} ( {{node.counter}} )</span>
+  <div class="box">
+    <button mat-icon-button color="primary" (click)="addNewNode(node)">
+      <mat-icon>add_circle</mat-icon>
+    </button>
+    <button mat-icon-button color="primary" (click)="deleteNode(node)">
+      <mat-icon>delete_forever</mat-icon>
+    </button>
+  </div>
+</mat-tree-node>
+</mat-tree>

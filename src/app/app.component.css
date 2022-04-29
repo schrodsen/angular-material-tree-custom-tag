@@ -1,0 +1,29 @@
+.type-icon {
+  color: #999;
+  margin-right: 5px;
+}
+
+.hidden {
+  display: none;
+}
+
+.shown {
+  display: flex;
+}
+
+.form-container {
+  flex-direction: column;
+}
+
+.form-container > * {
+  width: 100%;
+}
+
+.box {
+  border: 1px black solid;
+}
+
+.right {
+  display: flex;
+  justify-content: right;
+}
