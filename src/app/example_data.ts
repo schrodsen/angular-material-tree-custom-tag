@@ -18,13 +18,13 @@ export const files = [
             counter: 0,
             children: [
               {
-                nodeId: 'AAB0',
+                nodeId: 'AAC0',
                 name: 'Koblenz',
                 type: 'folder',
                 counter: 6,
               },
               {
-                nodeId: 'AAB1',
+                nodeId: 'AAC1',
                 name: 'Bonn',
                 type: 'folder',
                 counter: 0,
