@@ -27,3 +27,7 @@
   display: flex;
   justify-content: right;
 }
+
+.bgLevel {
+  background-color: rgb(51, 117, 187);
+}

@@ -1,113 +1,102 @@
-<button mat-icon-button color="primary" (click)="addNewRoot()">
-  <mat-icon>add_box</mat-icon>
-</button>
-
-<button mat-icon-button color="primary" (click)="expandAll()">
-  <mat-icon>expand</mat-icon>
-</button>
-
-<button mat-icon-button color="primary" (click)="collapseAll()">
-  <mat-icon>compress</mat-icon>
-</button>
-
-<button mat-icon-button color="primary" (click)="refresh()">
-  <mat-icon>sync</mat-icon>
-</button>
-
-<p id="newRoot" class="hidden form-container">
-  <mat-form-field appearance="fill">
-    <mat-label>Neues Tag</mat-label>
-    <input id="inputRoot"
-      [(ngModel)]="newNodeLabel"
-      matInput
-      type="text"
-      (keyup.enter)="saveNewRootNode()"
-      (keyup.esc)="hideNewRootNode()"
-    />
-    <button
-      mat-icon-button
-      matPrefix
-      color="primary"
-      (click)="saveNewRootNode()"
-    >
-      <mat-icon>save</mat-icon>
+<div class="container">
+  <div class="mb-3">
+    <button mat-icon-button color="primary" matTooltip="Tag hinzufügen" (click)="addNewRoot()">
+      <mat-icon>add_box</mat-icon>
     </button>
-  </mat-form-field>
-</p>
 
-<mat-tree [dataSource]="dataSource" [treeControl]="treeControl"
-  cdkDropList (cdkDropListDropped)="drop($event)">
-  <mat-tree-node class="box"
-    *matTreeNodeDef="let node"
-    matTreeNodeToggle
-    matTreeNodePadding
-    cdkDrag [cdkDragData]="node" (mouseenter)="dragHover(node)" (mouseleave)="dragHoverEnd()" (cdkDragStarted)="dragStart()" (cdkDragReleased)="dragEnd()"
-  >
+    <button mat-icon-button color="primary" matTooltip="Alle aufklappen" (click)="expandAll()">
+      <mat-icon>expand</mat-icon>
+    </button>
+
+    <button mat-icon-button color="primary" matTooltip="Minimieren" (click)="collapseAll()">
+      <mat-icon>compress</mat-icon>
+    </button>
+
+    <button mat-icon-button color="primary" matTooltip="Aktualisieren" (click)="refresh()">
+      <mat-icon>sync</mat-icon>
+    </button>
+  </div>
+
+  <div id="newRoot" class="container hidden">
+    <mat-form-field appearance="fill">
+      <mat-label>Neues Tag</mat-label>
+      <input id="inputRoot"
+        [(ngModel)]="newNodeLabel"
+        matInput
+        type="text"
+        (keyup.enter)="saveNewRootNode()"
+        (keyup.esc)="hideNewRootNode()"
+      />
+      <button mat-icon-button matSuffix color="primary"
+        (click)="saveNewRootNode()"
+        matTooltip="Speichern" matTooltipPosition="above">
+        <mat-icon>save</mat-icon>
+      </button>
+    </mat-form-field>
+  </div>
+
+<mat-tree [dataSource]="dataSource" [treeControl]="treeControl" cdkDropList (cdkDropListDropped)="drop($event)">
+
+  <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle matTreeNodePadding [ngClass]="{'bgLevel': node.level % 2 === 0}"
+    cdkDrag [cdkDragData]="node" (mouseenter)="dragHover(node)" (mouseleave)="dragHoverEnd()" (cdkDragStarted)="dragStart()" (cdkDragReleased)="dragEnd()">
     <button mat-icon-button disabled></button>
-    <mat-icon class="type-icon" [attr.aria-label]="node.type + 'icon'"
-      >folder</mat-icon
-    >
-    <span style="flex: 1 1 auto;">{{ node.name }} ( {{ node.counter }} )</span>
-    <button mat-icon-button color="warn">
+    <mat-icon class="type-icon" [attr.aria-label]="node.type + 'icon'">folder</mat-icon>
+    <span style="flex: 1 1 auto;">{{ node.name }} ({{ node.counter }})</span>
+    <button mat-icon-button color="secondary" matTooltip="Hinzufügen" matTooltipPosition="left" (click)="addNewNode(node)">
       <mat-icon>add_box</mat-icon>
     </button>
   </mat-tree-node>
 
-  <mat-tree-node class="box" *matTreeNodeDef="let node; when: hasNoContent" matTreeNodePadding style="margin-left:-40px"
+  <mat-tree-node *matTreeNodeDef="let node; when: hasNoContent" matTreeNodePadding
     cdkDrag [cdkDragData]="node" (mouseenter)="dragHover(node)" (mouseleave)="dragHoverEnd()" (cdkDragStarted)="dragStart()" (cdkDragReleased)="dragEnd()">
-    <button mat-icon-button disabled></button>
-    <mat-form-field appearance="outline">
+
+    <mat-icon matPrefix>subdirectory_arrow_right</mat-icon>
+    <mat-form-field appearance="fill">
       <mat-label>Neuer Tag</mat-label>
-      <input id="inputChild"
-        matInput
+      <input id="inputChild" matInput
         [(ngModel)]="newNodeLabel"
         (keyup.enter)="saveNode(node)"
-        (keyup.esc)="cancel(node)"
-      />
+        (keyup.esc)="cancel(node)"/>
       <mat-hint>Name des neuen Tags</mat-hint>
-      <button
-        mat-icon-button
-        matSuffix
-        color="primary"
-        (click)="saveNode(node)"
-      >
+      <button mat-icon-button matSuffix color="secondary" matTooltip="Neuen Tag hinzufügen" (click)="saveNode(node)">
         <mat-icon>create_new_folder</mat-icon>
       </button>
-      <button mat-icon-button matSuffix color="primary" (click)="cancel(node)">
+      <button mat-icon-button matSuffix color="secondary" matTooltip="Abbrechen" (click)="cancel(node)">
         <mat-icon>close</mat-icon>
       </button>
     </mat-form-field>
   </mat-tree-node>
 
-  <mat-tree-node  class="box" *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding 
+  <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding [ngClass]="{'bgLevel': node.level % 2 === 0}"
     cdkDrag [cdkDragData]="node" (mouseenter)="dragHover(node)" (mouseleave)="dragHoverEnd()" (cdkDragStarted)="dragStart()" (cdkDragReleased)="dragEnd()">
+
     <button mat-icon-button matTreeNodeToggle [attr.aria-label]="'toggle ' + node.name">
       <mat-icon class="mat-icon-rtl-mirror">
         {{ treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right' }}
       </mat-icon>
     </button>
     <mat-icon class="type-icon" [attr.aria-label]="node.type + 'icon'">folder</mat-icon>
-    <span style="flex: 1 1 auto;">{{ node.name }} ( {{ node.counter }} )</span>
-    <div>
-      <button mat-icon-button color="primary" (click)="addNewNode(node)">
-        <mat-icon>add_box</mat-icon>
-      </button>
-    </div>
+    <span style="flex: 1 1 auto;">{{ node.name }} ({{ node.counter }})</span>
+    <button mat-icon-button color="secondary" matTooltip="Hinzufügen" matTooltipPosition="right" (click)="addNewNode(node)">
+      <mat-icon>add_box</mat-icon>
+    </button>
   </mat-tree-node>
 
-  <mat-tree-node  class="box" *matTreeNodeDef="let node; when: hasNoMedia" matTreeNodePadding
-    cdkDrag [cdkDragData]="node" (mouseenter)="dragHover(node)" (mouseleave)="dragHoverEnd()" (cdkDragStarted)="dragStart()" (cdkDragReleased)="dragEnd()"
-  >
+  <mat-tree-node *matTreeNodeDef="let node; when: hasNoMedia" matTreeNodePadding [ngClass]="{'bgLevel': node.level % 2 === 0}"
+    cdkDrag [cdkDragData]="node" (mouseenter)="dragHover(node)" (mouseleave)="dragHoverEnd()" (cdkDragStarted)="dragStart()" (cdkDragReleased)="dragEnd()">
+
     <button mat-icon-button disabled></button>
     <mat-icon class="type-icon" [attr.aria-label]="node.type + 'icon'">folder</mat-icon>
-    <span style="flex: 1 1 auto;">{{ node.name }} ( {{ node.counter }} )</span>
+    <span style="flex: 1 1 auto;">{{ node.name }}</span>
     <div>
-      <button mat-icon-button color="primary" (click)="addNewNode(node)">
+      <button mat-icon-button color="secondary" matTooltip="Neuen Tag hinzufügen" (click)="addNewNode(node)">
         <mat-icon>add_box</mat-icon>
       </button>
-      <button mat-icon-button color="primary" (click)="deleteNode(node)">
+      <button mat-icon-button color="secondary" matTooltip="Entfernen"  (click)="deleteNode(node)">
         <mat-icon>delete_forever</mat-icon>
       </button>
     </div>
   </mat-tree-node>
 </mat-tree>
+
+</div>
